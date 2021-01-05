@@ -7,7 +7,6 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   @override
-  int _currentindex = 0;
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
@@ -48,7 +47,6 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _currentindex,
         iconSize: 30,
         fixedColor: Colors.red,
         items: [
@@ -83,9 +81,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
         onTap: (index) {
-          setState(() {
-            _currentindex = index;
-          });
+          setState(() {});
         },
       ),
     );

@@ -4,10 +4,7 @@ import 'package:firstdemo/screen/login.dart';
 import 'package:firstdemo/widgets/customShape.dart';
 import 'package:firstdemo/widgets/customappbar.dart';
 import 'package:firstdemo/widgets/responsiveWidget.dart';
-import 'package:firstdemo/widgets/textFormField.dart';
-import 'package:firstdemo/widgets/textFormFieldPass.dart';
 import 'package:flutter/material.dart';
-import 'package:dio/dio.dart';
 
 class SignUp extends StatefulWidget {
   @override

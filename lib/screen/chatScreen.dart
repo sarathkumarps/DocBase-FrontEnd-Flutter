@@ -13,7 +13,6 @@ class _ChatScreenState extends State<ChatScreen> {
   final inputController = TextEditingController();
   final List<String> messageList = [];
   final WebSocketChannel channel;
-  final TextEditingController _controller = TextEditingController();
 
   _ChatScreenState({this.channel}) {
     channel.stream.listen((data) {
