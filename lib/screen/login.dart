@@ -260,7 +260,7 @@ class _SignInScreenState extends State<SignInScreen> {
                   } catch (e) {
                     print("Exception  " + e);
                   }
-                }
+                } else {}
               },
               child: Text(
                 "LOGIN",

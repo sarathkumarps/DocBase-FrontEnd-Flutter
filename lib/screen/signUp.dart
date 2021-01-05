@@ -1,3 +1,6 @@
+import 'package:firstdemo/api/signApi.dart';
+import 'package:firstdemo/model/RegModel.dart';
+import 'package:firstdemo/screen/login.dart';
 import 'package:firstdemo/widgets/customShape.dart';
 import 'package:firstdemo/widgets/customappbar.dart';
 import 'package:firstdemo/widgets/responsiveWidget.dart';
@@ -25,7 +28,7 @@ class _SignUpState extends State<SignUp> {
   String rpassword = '';
   String userid = '';
   bool hidePassword = true;
-  // LoginRequestModel requestModel;
+  RegRequestModel requestModel;
   @override
   // void initState() {
   //   super.initState();
@@ -176,7 +179,30 @@ class _SignUpState extends State<SignUp> {
 
             FlatButton(
               padding: EdgeInsets.symmetric(vertical: 12, horizontal: 18),
-              onPressed: () {},
+              onPressed: () {
+                if (validateAndSave()) {
+                  RegApi apiService = new RegApi();
+                  try {
+                    apiService.register(requestModel).then((value) {
+                      print("Tocken");
+                      print(value.token);
+                      if (value.token.isNotEmpty) {
+                        print("Succes");
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                SignInPage(), //Can Pass value.tocken
+                          ),
+                        );
+                        print("Routing to Login  screen");
+                      }
+                    });
+                  } catch (e) {
+                    print(e);
+                  }
+                }
+              },
               child: Text(
                 "REGISTER",
                 style: TextStyle(color: Colors.white),
@@ -211,38 +237,13 @@ class _SignUpState extends State<SignUp> {
     );
   }
 
-  Widget button() {
-    // bool showSpinner = false;
-    return RaisedButton(
-      elevation: 6.0,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
-      highlightColor: Colors.red,
-      splashColor: Colors.green,
-      onPressed: () {
-        // content
-        setState(() {
-          rname = emailController.text;
-          rpassword = passwordController.text;
-
-          print(rname);
-          print(rpassword);
-        });
-      },
-      textColor: Colors.white,
-      padding: EdgeInsets.all(0.0),
-      child: Container(
-        alignment: Alignment.center,
-        width: _large ? _width / 4 : (_medium ? _width / 3.75 : _width / 3.5),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(20.0)),
-          gradient: LinearGradient(
-            colors: <Color>[Colors.orange[200], Colors.pinkAccent],
-          ),
-        ),
-        padding: const EdgeInsets.all(12.0),
-        child: Text('REGISTER',
-            style: TextStyle(fontSize: _large ? 14 : (_medium ? 12 : 10))),
-      ),
-    );
+  bool validateAndSave() {
+    final form = _key.currentState;
+    if (form.validate()) {
+      form.save();
+      return true;
+    } else {
+      return false;
+    }
   }
 }
