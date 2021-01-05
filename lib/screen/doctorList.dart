@@ -12,92 +12,116 @@ class _DoctorListState extends State<DoctorList> {
   //
 
   List<Datum> _doctors;
+  ScrollController _scrollController = ScrollController();
+  int currentMax = 5;
+  int pageNumber = 1;
+  bool isLoading = false;
 
   @override
   void initState() {
+    pageNumber = 1;
     super.initState();
     DoctorServices.getDoctors().then((doctors) {
       setState(() {
         _doctors = doctors;
+        _scrollController.addListener(() {
+          if (_scrollController.position.pixels ==
+              _scrollController.position.maxScrollExtent) {
+            _getMoreData();
+          }
+        });
       });
     });
   }
 
+  _getMoreData() {
+    print("Get More ");
+    isLoading = true;
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: Size.fromHeight(70),
-        child: AppBar(
-          title: Text(
-            "Available Doctors",
-            style: TextStyle(color: Colors.white),
-          ),
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back, color: Colors.white),
-            onPressed: () => Navigator.of(context).pop(),
-          ),
-          actions: <Widget>[
-            Padding(
-                padding: EdgeInsets.only(right: 20.0),
-                child: GestureDetector(
-                  onTap: () {
-                    Navigator.pop(context);
-                  },
-                  child: Icon(
-                    Icons.logout,
-                    color: Colors.white,
-                    size: 50,
-                  ),
-                )),
-          ],
-          centerTitle: true,
-          backgroundColor: Colors.white10,
-          flexibleSpace: Container(
-            decoration: BoxDecoration(
-                gradient: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: <Color>[Colors.red, Colors.blue])),
-          ),
-        ),
-      ),
-      body: Container(
-        decoration: BoxDecoration(
-          gradient:
-              LinearGradient(colors: [Colors.orange[200], Colors.pinkAccent]),
-        ),
-        child: ListView.builder(
-            padding: EdgeInsets.all(20),
-            itemCount: null == _doctors ? 0 : _doctors.length,
-            itemBuilder: (context, index) {
-              Datum doctor = _doctors[index];
-
-              return Card(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(30.0),
-                ),
-                color: Colors.blue[50],
-                child: ListTile(
-                    title: Text(doctor.firstName + "  " + doctor.lastName),
-                    trailing: Icon(
-                      Icons.radio_button_on,
-                      color: Colors.green,
-                    ),
-                    subtitle: Text(doctor.email),
-                    leading: CircleAvatar(
-                      backgroundImage: NetworkImage(doctor.avatar),
-                    ),
+    return Expanded(
+      child: Scaffold(
+        appBar: PreferredSize(
+          preferredSize: Size.fromHeight(50),
+          child: AppBar(
+            title: Text(
+              "Available Doctors",
+              style: TextStyle(color: Colors.white),
+            ),
+            leading: IconButton(
+              icon: Icon(Icons.arrow_back, color: Colors.white),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+            actions: <Widget>[
+              Padding(
+                  padding: EdgeInsets.only(right: 20.0),
+                  child: GestureDetector(
                     onTap: () {
-                      Navigator.push(
-                        context,
-                        new MaterialPageRoute(
-                          builder: (context) => Details(_doctors[index]),
+                      Navigator.pop(context);
+                    },
+                    child: Icon(
+                      Icons.logout,
+                      color: Colors.white,
+                      size: 50,
+                    ),
+                  )),
+            ],
+            centerTitle: true,
+            backgroundColor: Colors.white10,
+            flexibleSpace: Container(
+              decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: <Color>[Colors.red, Colors.blue])),
+            ),
+          ),
+        ),
+        body: Container(
+          decoration: BoxDecoration(
+            gradient:
+                LinearGradient(colors: [Colors.orange[200], Colors.pinkAccent]),
+          ),
+          child: ListView.builder(
+              padding: EdgeInsets.all(20),
+              controller: _scrollController,
+              itemCount: null == _doctors ? 0 : _doctors.length,
+              itemBuilder: (context, index) {
+                Datum doctor = _doctors[index];
+                _getMoreData();
+
+                return Container(
+                  height: 150,
+                  alignment: Alignment.center,
+                  child: Card(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30.0),
+                    ),
+                    color: Colors.blue[50],
+                    child: ListTile(
+                        title: Text(doctor.firstName + "  " + doctor.lastName),
+                        trailing: Icon(
+                          Icons.radio_button_on,
+                          color: Colors.green,
                         ),
-                      );
-                    }),
-              );
-            }),
+                        subtitle: Text(doctor.email),
+                        leading: CircleAvatar(
+                          backgroundImage: NetworkImage(doctor.avatar),
+                        ),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            new MaterialPageRoute(
+                              builder: (context) => Details(_doctors[index]),
+                            ),
+                          );
+                        }),
+                  ),
+                );
+              }),
+        ),
       ),
     );
   }
