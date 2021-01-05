@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 
 Dio dio = Dio();
-// var url = 'https://reqres.in/api/register';
+
 var url = 'https://reqres.in/api/register';
 
 class RegService {

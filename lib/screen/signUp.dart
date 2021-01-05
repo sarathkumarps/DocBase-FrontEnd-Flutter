@@ -1,4 +1,3 @@
-import 'package:firstdemo/screen/doctorList.dart';
 import 'package:firstdemo/widgets/customShape.dart';
 import 'package:firstdemo/widgets/customappbar.dart';
 import 'package:firstdemo/widgets/responsiveWidget.dart';
@@ -25,16 +24,13 @@ class _SignUpState extends State<SignUp> {
   String rname = '';
   String rpassword = '';
   String userid = '';
-  putData(rname, rpassword) async {
-    try {
-      Response response = await Dio()
-          .post("/putData", data: {"username": 0, "password": "dev"});
-      print("response");
-      print(response.data);
-    } catch (e) {
-      print(e);
-    }
-  }
+  bool hidePassword = true;
+  // LoginRequestModel requestModel;
+  @override
+  // void initState() {
+  //   super.initState();
+  //   requestModel = new LoginRequestModel();
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -57,7 +53,6 @@ class _SignUpState extends State<SignUp> {
               regTextRow(),
               form(),
               SizedBox(height: _height / 12),
-              button(),
             ],
           ),
         ),
@@ -121,30 +116,78 @@ class _SignUpState extends State<SignUp> {
         key: _key,
         child: Column(
           children: <Widget>[
-            emailTextFormField(),
+            // emailTextFormField(),
+            new TextFormField(
+              keyboardType: TextInputType.emailAddress,
+              // onSaved: (input) => requestModel.email = input,
+              validator: (input) =>
+                  !input.contains('@') ? "Email Id should be valid" : null,
+              decoration: new InputDecoration(
+                hintText: "Email Address",
+                enabledBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(
+                        color: Theme.of(context).accentColor.withOpacity(0.2))),
+                focusedBorder: UnderlineInputBorder(
+                    borderSide:
+                        BorderSide(color: Theme.of(context).accentColor)),
+                prefixIcon: Icon(
+                  Icons.email,
+                  color: Theme.of(context).accentColor,
+                ),
+              ),
+            ),
             SizedBox(height: _height / 40.0),
-            passwordTextFormField(),
+
+            new TextFormField(
+              style: TextStyle(color: Theme.of(context).accentColor),
+              keyboardType: TextInputType.text,
+              // onSaved: (input) => requestModel.password = input,
+              validator: (input) => input.length < 3
+                  ? "Password should be more than 3 characters"
+                  : null,
+              obscureText: hidePassword,
+              decoration: new InputDecoration(
+                hintText: "Password",
+                enabledBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(
+                        color: Theme.of(context).accentColor.withOpacity(0.2))),
+                focusedBorder: UnderlineInputBorder(
+                    borderSide:
+                        BorderSide(color: Theme.of(context).accentColor)),
+                prefixIcon: Icon(
+                  Icons.lock,
+                  color: Theme.of(context).accentColor,
+                ),
+                suffixIcon: IconButton(
+                  onPressed: () {
+                    setState(() {
+                      // hidePassword = !hidePassword;
+                    });
+                  },
+                  color: Theme.of(context).accentColor.withOpacity(0.4),
+                  icon: Icon(
+                      hidePassword ? Icons.visibility_off : Icons.visibility),
+                ),
+              ),
+            ),
+            SizedBox(height: _height / 40.0),
+
+//submit button
+
+            FlatButton(
+              padding: EdgeInsets.symmetric(vertical: 12, horizontal: 18),
+              onPressed: () {},
+              child: Text(
+                "REGISTER",
+                style: TextStyle(color: Colors.white),
+              ),
+              color: Colors.orange,
+              shape: StadiumBorder(),
+            )
+            // passwordTextFormField()
           ],
         ),
       ),
-    );
-  }
-
-  Widget emailTextFormField() {
-    return CustomTextField(
-      keyboardType: TextInputType.emailAddress,
-      textEditingController: emailController,
-      icon: Icons.email,
-      hint: "Enter Valid Email ID",
-    );
-  }
-
-  Widget passwordTextFormField() {
-    return CustomTextFieldPass(
-      textEditingController: passwordController,
-      icon: Icons.lock,
-      obscureText: true,
-      hint: "Password Should be Minimum of 6 Letters",
     );
   }
 
@@ -183,7 +226,6 @@ class _SignUpState extends State<SignUp> {
 
           print(rname);
           print(rpassword);
-          putData(rname, rpassword);
         });
       },
       textColor: Colors.white,

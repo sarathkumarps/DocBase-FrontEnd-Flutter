@@ -234,9 +234,10 @@ class _SignInScreenState extends State<SignInScreen> {
                 if (validateAndSave()) {
                   print(" Details ");
                   print(requestModel.toJson()); //Working
-                  try {
-                    LoginApi apiService = new LoginApi();
 
+                  LoginApi apiService = new LoginApi();
+
+                  try {
                     apiService.login(requestModel).then(
                       (value) {
                         //Error
@@ -247,13 +248,12 @@ class _SignInScreenState extends State<SignInScreen> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => DoctorList()),
+                                builder: (context) =>
+                                    DoctorList()), //Can Pass value.tocken
                           );
                           print("Routing to Doctor up screen");
                         } else {
-                          SnackBar(
-                            content: Text(value.error),
-                          );
+                          print("ERROR");
                         }
                       },
                     );

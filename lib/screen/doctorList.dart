@@ -1,5 +1,3 @@
-import 'package:dio/dio.dart';
-import 'dart:convert';
 import 'package:firstdemo/api/doctorServicesApi.dart';
 import 'package:firstdemo/api/doctorsListApi.dart';
 import 'package:flutter/material.dart';
@@ -10,26 +8,7 @@ class DoctorList extends StatefulWidget {
 }
 
 class _DoctorListState extends State<DoctorList> {
-  // List<Doctors> _doctors;
-  // Future<DoctorList> getData() async {
-  //   try {
-  //     Response response = await Dio().get(
-  //       "https://reqres.in/api/users",
-  //     );
-  //     Map<String, dynamic> res = json.decode(response.toString());
-  //     dynamic rest = res["data"] as List;
-  //     print(rest);
-  //     // print(response.data.toString());
-  //   } catch (e) {
-  //     print(e);
-  //   }
-  // }
-
-  // @override
-  // void initState() {
-  //   super.initState();
-
-  // }
+  //
 
   List<Datum> _doctors;
 

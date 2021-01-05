@@ -5,7 +5,6 @@ import 'package:dio/dio.dart';
 import 'dart:convert';
 
 import 'package:firstdemo/model/loginModel.dart';
-import 'package:flutter/cupertino.dart';
 
 class LoginApi {
   Future<LoginResponseModel> login(LoginRequestModel loginRequestModel) async {
@@ -16,11 +15,10 @@ class LoginApi {
     if (response.statusCode == 200) {
       return LoginResponseModel.fromJson((response.data)); //Was Error
     } else if (response.statusCode == 400) {
-      print("User Not Found");
-
       print(response.data);
       return LoginResponseModel.fromJson((response.data));
     } else {
+      print(DioErrorType.RESPONSE);
       return LoginResponseModel.fromJson((response.data));
     }
   }
