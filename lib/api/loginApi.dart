@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:dio/dio.dart';
 import 'dart:convert';
 
@@ -14,5 +16,6 @@ class LoginApi {
       print(response.data);
       return LoginResponseModel.fromJson(json.decode(response.data));
     }
+    return null;
   }
 }
