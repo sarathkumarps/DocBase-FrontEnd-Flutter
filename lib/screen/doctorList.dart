@@ -1,5 +1,6 @@
 import 'package:firstdemo/api/doctorServicesApi.dart';
 import 'package:firstdemo/api/doctorsListApi.dart';
+import 'package:firstdemo/screen/chatScreen.dart';
 import 'package:flutter/material.dart';
 
 class DoctorList extends StatefulWidget {
@@ -269,7 +270,11 @@ class _DetailsState extends State<Details> {
                             color: Colors.green,
                             textColor: Colors.black,
                             onPressed: () {
-                              // Navigator.pushNamed(context, chatScreen);
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => ChatScreen()),
+                              );
                             },
                           )),
                           Expanded(
