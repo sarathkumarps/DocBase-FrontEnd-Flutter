@@ -1,12 +1,16 @@
 class RegResponseModel {
   final String token;
   final String error;
-  final String id;
+  // final String id;
 
-  RegResponseModel({this.id, this.token, this.error});
+  RegResponseModel(
+      {
+      // this.id,
+      this.token,
+      this.error});
   factory RegResponseModel.fromJson(Map<String, dynamic> json) {
     return RegResponseModel(
-      id: json["id"] != null ? json["id"] : "",
+      // id: json["id"] != null ? json["id"] : "",
       token: json["token"] != null ? json["token"] : "",
       error: json["error"] != null ? json["error"] : "",
     );

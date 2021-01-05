@@ -5,7 +5,8 @@ class RegApi {
   Future<RegResponseModel> register(
       RegRequestModel registerRequestModel) async {
     var url = 'https://reqres.in/api/register';
-    final response = await Dio().post(url, data: registerRequestModel.toJson());
+    final response = await Dio()
+        .post(url, data: {"email": "eve.holt@reqres.in", "password": "pistol"});
     //  final response = await Dio().post(url, data: registerRequestModel.toJson());
     print("Tocken");
     print(response.data);
