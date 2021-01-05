@@ -1,15 +1,10 @@
-import 'package:firstdemo/api/doctorServicesApi.dart';
 import 'package:firstdemo/api/loginApi.dart';
 import 'package:firstdemo/model/loginModel.dart';
-import 'package:firstdemo/screen/doctorList.dart';
 import 'package:firstdemo/screen/signUp.dart';
 import 'package:firstdemo/widgets/customShape.dart';
 import 'package:firstdemo/widgets/responsiveWidget.dart';
-import 'package:firstdemo/widgets/textFormField.dart';
-import 'package:firstdemo/widgets/textFormFieldPass.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:modal_progress_hud/modal_progress_hud.dart';
 
 class SignInPage extends StatelessWidget {
   @override
@@ -236,14 +231,24 @@ class _SignInScreenState extends State<SignInScreen> {
               padding: EdgeInsets.symmetric(vertical: 12, horizontal: 18),
               onPressed: () {
                 if (validateAndSave()) {
+                  print(" Details ");
                   print(requestModel.toJson()); //Working
-                  LoginApi apiService = new LoginApi();
-                  // apiService.login(requestModel).then((value) {});
-                  apiService.login(requestModel).then((value) {
-                    if (value.token.isNotEmpty) {
-                      print("sucees");
-                    }
-                  });
+                  try {
+                    LoginApi apiService = new LoginApi();
+
+                    apiService.login(requestModel).then(
+                      (value) {
+                        //Error
+                        print("Geting Tocken");
+                        print(value.token);
+                        if (value.token.isNotEmpty) {
+                          print("succees");
+                        }
+                      },
+                    );
+                  } catch (e) {
+                    print("Exception  " + e);
+                  }
                 }
               },
               child: Text(
