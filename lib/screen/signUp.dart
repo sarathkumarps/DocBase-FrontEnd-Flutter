@@ -25,12 +25,12 @@ class _SignUpState extends State<SignUp> {
   String rpassword = '';
   String userid = '';
   bool hidePassword = true;
-  RegRequestModel requestModel;
+  RegRequestModel rgrequestModel;
   @override
-  // void initState() {
-  //   super.initState();
-  //   requestModel = new LoginRequestModel();
-  // }
+  void initState() {
+    super.initState();
+    rgrequestModel = new RegRequestModel();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -180,7 +180,7 @@ class _SignUpState extends State<SignUp> {
                 if (validateAndSave()) {
                   RegApi apiService = new RegApi();
                   try {
-                    apiService.register(requestModel).then((value) {
+                    apiService.register(rgrequestModel).then((value) {
                       print("Tocken");
                       print(value.token);
                       if (value.token.isNotEmpty) {

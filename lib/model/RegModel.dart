@@ -22,8 +22,8 @@ class RegRequestModel {
 
   Map<String, dynamic> toJson() {
     Map<String, dynamic> map = {
-      "email": email.trim(),
-      "password": password.trim(),
+      "email": email,
+      "password": password,
     };
     return map;
   }

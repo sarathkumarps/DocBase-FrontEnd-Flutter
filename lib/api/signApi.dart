@@ -6,6 +6,7 @@ class RegApi {
       RegRequestModel registerRequestModel) async {
     var url = 'https://reqres.in/api/register';
     final response = await Dio().post(url, data: registerRequestModel.toJson());
+    //  final response = await Dio().post(url, data: registerRequestModel.toJson());
     print("Tocken");
     print(response.data);
     if (response.statusCode == 200) {
@@ -14,8 +15,7 @@ class RegApi {
       print(response.data);
       return RegResponseModel.fromJson((response.data));
     } else {
-      print(DioErrorType.RESPONSE);
-      return RegResponseModel.fromJson((response.data));
+      throw Exception("Cant Reach Data");
     }
   }
 }

@@ -3,6 +3,7 @@ import 'package:firstdemo/model/loginModel.dart';
 import 'package:firstdemo/screen/doctorList.dart';
 import 'package:firstdemo/screen/signUp.dart';
 import 'package:firstdemo/widgets/customShape.dart';
+import 'package:firstdemo/widgets/progressHUD.dart';
 import 'package:firstdemo/widgets/responsiveWidget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -28,7 +29,8 @@ class _SignInScreenState extends State<SignInScreen> {
   bool _large;
   bool _medium;
   bool hidePassword = true;
-  // bool isApiCall;
+  bool isApiCallProcess = false;
+
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   GlobalKey<FormState> _key = GlobalKey();
@@ -45,6 +47,15 @@ class _SignInScreenState extends State<SignInScreen> {
 
   @override
   Widget build(BuildContext context) {
+    return ProgressHUD(
+      child: _loginui(context),
+      inAsyncCall: isApiCallProcess,
+      opacity: 0.3,
+    );
+  }
+
+  @override
+  Widget _loginui(BuildContext context) {
     _height = MediaQuery.of(context).size.height;
     _width = MediaQuery.of(context).size.width;
     _pixelRatio = MediaQuery.of(context).devicePixelRatio;
@@ -232,35 +243,45 @@ class _SignInScreenState extends State<SignInScreen> {
               padding: EdgeInsets.symmetric(vertical: 12, horizontal: 18),
               onPressed: () {
                 if (validateAndSave()) {
+                  setState(() {
+                    // isApiCallProcess = true;
+                  });
+
                   print(" Details ");
                   print(requestModel.toJson()); //Working
 
                   LoginApi apiService = new LoginApi();
 
-                  try {
-                    apiService.login(requestModel).then(
-                      (value) {
-                        //Error
-                        print("Geting Tocken");
-                        print(value.token);
-                        if (value.token.isNotEmpty) {
-                          print("succees");
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    DoctorList()), //Can Pass value.tocken
-                          );
-                          print("Routing to Doctor up screen");
-                        } else {
-                          print("ERROR");
-                        }
-                      },
-                    );
-                  } catch (e) {
-                    print("Exception  " + e);
-                  }
-                } else {}
+                  apiService.login(requestModel).then(
+                    (value) {
+                      setState(() {
+                        isApiCallProcess = false;
+                      });
+                      //Error
+                      print("Geting Tocken");
+                      print(value.token);
+                      if (value.token.isNotEmpty) {
+                        print("succees");
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  DoctorList()), //Can Pass value.tocken
+                        );
+                        print("Routing to Doctor up screen");
+                      } else {
+                        setState(() {
+                          isApiCallProcess = false;
+                        });
+                      }
+                    },
+                  );
+                } else {
+                  print("ERROR");
+                  setState(() {
+                    isApiCallProcess = false;
+                  });
+                }
               },
               child: Text(
                 "LOGIN",
