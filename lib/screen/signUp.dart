@@ -1,3 +1,4 @@
+import 'package:firstdemo/screen/doctorList.dart';
 import 'package:firstdemo/widgets/customShape.dart';
 import 'package:firstdemo/widgets/customappbar.dart';
 import 'package:firstdemo/widgets/responsiveWidget.dart';
@@ -24,6 +25,17 @@ class _SignUpState extends State<SignUp> {
   String rname = '';
   String rpassword = '';
   String userid = '';
+  putData(rname, rpassword) async {
+    try {
+      Response response = await Dio()
+          .post("/putData", data: {"username": 0, "password": "dev"});
+      print("response");
+      print(response.data);
+    } catch (e) {
+      print(e);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     _height = MediaQuery.of(context).size.height;
@@ -163,19 +175,15 @@ class _SignUpState extends State<SignUp> {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
       highlightColor: Colors.red,
       splashColor: Colors.green,
-      onPressed: () async {
-        setState(() {
-          showSpinner = true;
-        });
-
+      onPressed: () {
         // content
         setState(() {
           rname = emailController.text;
           rpassword = passwordController.text;
 
-          // await FavData(uid: us)
           print(rname);
           print(rpassword);
+          putData(rname, rpassword);
         });
       },
       textColor: Colors.white,

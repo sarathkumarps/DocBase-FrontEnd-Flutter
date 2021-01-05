@@ -1,3 +1,7 @@
+import 'package:firstdemo/api/doctorServicesApi.dart';
+import 'package:firstdemo/api/loginApi.dart';
+import 'package:firstdemo/model/loginModel.dart';
+import 'package:firstdemo/screen/doctorList.dart';
 import 'package:firstdemo/screen/signUp.dart';
 import 'package:firstdemo/widgets/customShape.dart';
 import 'package:firstdemo/widgets/responsiveWidget.dart';
@@ -27,12 +31,21 @@ class _SignInScreenState extends State<SignInScreen> {
   double _pixelRatio;
   bool _large;
   bool _medium;
+  bool hidePassword = true;
+  // bool isApiCall;
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   GlobalKey<FormState> _key = GlobalKey();
   String name = '';
   String password = '';
-  bool showSpinner = false;
+  // bool showSpinner = false;
+  LoginRequestModel requestModel;
+
+  @override
+  void initState() {
+    super.initState();
+    requestModel = new LoginRequestModel();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,27 +55,23 @@ class _SignInScreenState extends State<SignInScreen> {
     _large = ResponsiveWidget.isScreenLarge(_width, _pixelRatio);
     _medium = ResponsiveWidget.isScreenMedium(_width, _pixelRatio);
 
-    return ModalProgressHUD(
-      inAsyncCall: showSpinner,
-      child: Material(
-        child: Container(
-          height: _height,
-          width: _width,
-          padding: EdgeInsets.only(bottom: 5),
-          child: SingleChildScrollView(
-            child: Column(
-              children: <Widget>[
-                clipShape(),
-                welcomeTextRow(),
-                signInTextRow(),
-                form(),
-                SizedBox(height: _height / 12),
-                button(),
-                signUpTextRow(),
-                SizedBox(height: _height / 25),
-                socialIconsRow()
-              ],
-            ),
+    return Material(
+      child: Container(
+        height: _height,
+        width: _width,
+        padding: EdgeInsets.only(bottom: 5),
+        child: SingleChildScrollView(
+          child: Column(
+            children: <Widget>[
+              clipShape(),
+              welcomeTextRow(),
+              signInTextRow(),
+              form(),
+              SizedBox(height: _height / 12),
+              // button(),
+              signUpTextRow(),
+              SizedBox(height: _height / 25),
+            ],
           ),
         ),
       ),
@@ -165,108 +174,90 @@ class _SignInScreenState extends State<SignInScreen> {
         key: _key,
         child: Column(
           children: <Widget>[
-            emailTextFormField(),
+            // emailTextFormField(),
+            new TextFormField(
+              keyboardType: TextInputType.emailAddress,
+              onSaved: (input) => requestModel.email = input,
+              validator: (input) =>
+                  !input.contains('@') ? "Email Id should be valid" : null,
+              decoration: new InputDecoration(
+                hintText: "Email Address",
+                enabledBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(
+                        color: Theme.of(context).accentColor.withOpacity(0.2))),
+                focusedBorder: UnderlineInputBorder(
+                    borderSide:
+                        BorderSide(color: Theme.of(context).accentColor)),
+                prefixIcon: Icon(
+                  Icons.email,
+                  color: Theme.of(context).accentColor,
+                ),
+              ),
+            ),
             SizedBox(height: _height / 40.0),
-            passwordTextFormField()
+
+            new TextFormField(
+              style: TextStyle(color: Theme.of(context).accentColor),
+              keyboardType: TextInputType.text,
+              onSaved: (input) => requestModel.password = input,
+              validator: (input) => input.length < 3
+                  ? "Password should be more than 3 characters"
+                  : null,
+              obscureText: hidePassword,
+              decoration: new InputDecoration(
+                hintText: "Password",
+                enabledBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(
+                        color: Theme.of(context).accentColor.withOpacity(0.2))),
+                focusedBorder: UnderlineInputBorder(
+                    borderSide:
+                        BorderSide(color: Theme.of(context).accentColor)),
+                prefixIcon: Icon(
+                  Icons.lock,
+                  color: Theme.of(context).accentColor,
+                ),
+                suffixIcon: IconButton(
+                  onPressed: () {
+                    setState(() {
+                      // hidePassword = !hidePassword;
+                    });
+                  },
+                  color: Theme.of(context).accentColor.withOpacity(0.4),
+                  icon: Icon(
+                      hidePassword ? Icons.visibility_off : Icons.visibility),
+                ),
+              ),
+            ),
+            SizedBox(height: _height / 40.0),
+
+//submit button
+
+            FlatButton(
+              padding: EdgeInsets.symmetric(vertical: 12, horizontal: 18),
+              onPressed: () {
+                if (validateAndSave()) {
+                  print(requestModel.toJson()); //Working
+                  LoginApi apiService = new LoginApi();
+                  // apiService.login(requestModel).then((value) {});
+                  apiService.login(requestModel).then((value) {
+                    if (value.token.isNotEmpty) {
+                      print("sucees");
+                    }
+                  });
+                }
+              },
+              child: Text(
+                "LOGIN",
+                style: TextStyle(color: Colors.white),
+              ),
+              color: Colors.orange,
+              shape: StadiumBorder(),
+            )
+            // passwordTextFormField()
           ],
         ),
       ),
     );
-  }
-
-  Widget emailTextFormField() {
-    return CustomTextField(
-      keyboardType: TextInputType.emailAddress,
-      textEditingController: emailController,
-      icon: Icons.email,
-      hint: "Email ID",
-    );
-  }
-
-  Widget passwordTextFormField() {
-    return CustomTextFieldPass(
-      textEditingController: passwordController,
-      icon: Icons.lock,
-      obscureText: true,
-      hint: "Password",
-    );
-  }
-
-  Widget socialIconsRow() {
-    return Container(
-      margin: EdgeInsets.only(top: _height / 150.0),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment:
-            MainAxisAlignment.center, //Center Row contents horizontally,
-      ),
-    );
-  }
-
-  Widget button() {
-    return RaisedButton(
-        elevation: 6.0,
-        shape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
-        textColor: Colors.white,
-        highlightColor: Colors.blue,
-        splashColor: Colors.green,
-        padding: EdgeInsets.all(0.0),
-        child: Container(
-          alignment: Alignment.center,
-          width: _large ? _width / 4 : (_medium ? _width / 3.75 : _width / 3.5),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(20.0)),
-            gradient: LinearGradient(
-              colors: <Color>[Colors.orange[200], Colors.pinkAccent],
-            ),
-          ),
-          padding: const EdgeInsets.all(12.0),
-          child: Text('SIGN IN',
-              style: TextStyle(fontSize: _large ? 14 : (_medium ? 12 : 10))),
-        ),
-        onPressed: () async {
-          setState(() {
-            showSpinner = true;
-          });
-          // content
-
-          name = emailController.text;
-          password = passwordController.text;
-          // try {
-          //   // final newUser = await _auth.signInWithEmailAndPassword(
-          //       // email: name, password: password);
-
-          //   // if (newUser != null) {
-          //     // for checking adding data to firebase
-
-          //     // User user = newUser.user;
-          //     print("Routing to Sign up screen");
-          //     // print(user.uid); // print userid of sign in user
-          //     // Navigator.of(context).pushNamed(doctorSheet);
-          //     setState(() {
-          //       showSpinner = false;
-          //     });
-          //     emailController.text = '';
-          //     passwordController.text = '';
-          //   }
-
-          // print("Success");
-          // } catch (e) {
-          //   print(e);
-          //   setState(() {
-          //     showSpinner = false;
-          //   });
-
-          // Scaffold.of(context).showSnackBar(
-          // SnackBar(
-          // content: Text(e.toString()),
-          // backgroundColor: Colors.red,
-          // ),
-          // );
-        }
-        // },
-        );
   }
 
   Widget signUpTextRow() {
@@ -306,5 +297,15 @@ class _SignInScreenState extends State<SignInScreen> {
         ],
       ),
     );
+  }
+
+  bool validateAndSave() {
+    final form = _key.currentState;
+    if (form.validate()) {
+      form.save();
+      return true;
+    } else {
+      return false;
+    }
   }
 }
