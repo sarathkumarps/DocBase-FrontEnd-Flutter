@@ -1,7 +1,8 @@
 class RegResponseModel {
   final String token;
   final String error;
-  final int id;
+  final String id;
+
   RegResponseModel({this.id, this.token, this.error});
   factory RegResponseModel.fromJson(Map<String, dynamic> json) {
     return RegResponseModel(
