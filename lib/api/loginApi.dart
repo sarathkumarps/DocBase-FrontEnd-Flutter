@@ -14,14 +14,14 @@ class LoginApi {
     print(" Token    ");
     print(response.data);
     if (response.statusCode == 200) {
-      return LoginResponseModel.fromJson((response.data)); //ERROR
+      return LoginResponseModel.fromJson((response.data)); //Was Error
     } else if (response.statusCode == 400) {
       print("User Not Found");
 
       print(response.data);
-      return LoginResponseModel.fromJson(json.decode(response.data));
+      return LoginResponseModel.fromJson((response.data));
     } else {
-      return LoginResponseModel.fromJson(json.decode(response.data));
+      return LoginResponseModel.fromJson((response.data));
     }
   }
 }

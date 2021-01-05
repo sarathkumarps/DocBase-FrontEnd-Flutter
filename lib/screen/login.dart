@@ -1,5 +1,6 @@
 import 'package:firstdemo/api/loginApi.dart';
 import 'package:firstdemo/model/loginModel.dart';
+import 'package:firstdemo/screen/doctorList.dart';
 import 'package:firstdemo/screen/signUp.dart';
 import 'package:firstdemo/widgets/customShape.dart';
 import 'package:firstdemo/widgets/responsiveWidget.dart';
@@ -243,6 +244,16 @@ class _SignInScreenState extends State<SignInScreen> {
                         print(value.token);
                         if (value.token.isNotEmpty) {
                           print("succees");
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => DoctorList()),
+                          );
+                          print("Routing to Doctor up screen");
+                        } else {
+                          SnackBar(
+                            content: Text(value.error),
+                          );
                         }
                       },
                     );
