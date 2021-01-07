@@ -1,8 +1,10 @@
 import 'dart:async';
 
+import 'package:firstdemo/screen/doctorList.dart';
 import 'package:firstdemo/screen/login.dart';
 import 'package:firstdemo/screen/signUp.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -10,17 +12,41 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-  void navigationPage() {
-    Navigator.push(
-        context, MaterialPageRoute(builder: (context) => SignInPage()));
+  String finalToken;
+
+  Future getValidationData() async {
+    final SharedPreferences sharedPreferences =
+        await SharedPreferences.getInstance();
+    var obtainedToken = sharedPreferences.getString("token");
+    setState(() {
+      finalToken = obtainedToken;
+    });
+    print("finalToken");
+    print(finalToken);
+    if (finalToken == null) {
+      print("No token");
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => SignInPage()));
+    } else {
+      print("Has Token");
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => DoctorList()), //Can Pass value.tocken
+      );
+    }
   }
+
+  // void navigationPage() {
+
+  // }
 
   @override
   void initState() {
     super.initState();
     Timer(
       Duration(seconds: 4),
-      () => navigationPage(),
+      () => getValidationData(),
     );
   }
 
@@ -31,7 +57,7 @@ class _SplashScreenState extends State<SplashScreen> {
         fit: StackFit.expand,
         children: <Widget>[
           Container(
-            decoration: BoxDecoration(color: Colors.pink),
+            decoration: BoxDecoration(color: Colors.blue[900]),
           ),
           Column(
             mainAxisAlignment: MainAxisAlignment.start,

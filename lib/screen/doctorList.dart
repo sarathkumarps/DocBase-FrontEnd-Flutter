@@ -1,7 +1,9 @@
 import 'package:firstdemo/api/doctorServicesApi.dart';
 import 'package:firstdemo/api/doctorsListApi.dart';
 import 'package:firstdemo/screen/chatScreen.dart';
+import 'package:firstdemo/screen/login.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class DoctorList extends StatefulWidget {
   @override
@@ -58,15 +60,29 @@ class _DoctorListState extends State<DoctorList> {
               Padding(
                   padding: EdgeInsets.only(right: 20.0),
                   child: GestureDetector(
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                    child: Icon(
-                      Icons.logout,
-                      color: Colors.white,
-                      size: 50,
-                    ),
-                  )),
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                      child: FlatButton(
+                        color: Colors.orange,
+                        minWidth: 20,
+                        height: 10,
+                        splashColor: Colors.green,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20)),
+                        onPressed: () async {
+                          print("SignOut");
+                          final SharedPreferences sharedPreferences =
+                              await SharedPreferences.getInstance();
+                          sharedPreferences.remove("token");
+                          print("Removed Tocken");
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => SignInPage()));
+                        },
+                        child: Text("SignOut"),
+                      ))),
             ],
             centerTitle: true,
             backgroundColor: Colors.white10,

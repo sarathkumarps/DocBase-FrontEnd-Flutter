@@ -7,6 +7,7 @@ import 'package:firstdemo/widgets/progressHUD.dart';
 import 'package:firstdemo/widgets/responsiveWidget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SignInPage extends StatelessWidget {
   @override
@@ -239,7 +240,9 @@ class _SignInScreenState extends State<SignInScreen> {
 
             FlatButton(
               padding: EdgeInsets.symmetric(vertical: 12, horizontal: 18),
-              onPressed: () {
+              onPressed: () async {
+                final SharedPreferences sharedPreferences =
+                    await SharedPreferences.getInstance();
                 if (validateAndSave()) {
                   setState(() {
                     // isApiCallProcess = true;
@@ -258,6 +261,7 @@ class _SignInScreenState extends State<SignInScreen> {
                       //Error
                       print("Geting Tocken");
                       print(value.token);
+                      sharedPreferences.setString("token", value.token);
                       if (value.token.isNotEmpty) {
                         print("succees");
                         Navigator.push(
