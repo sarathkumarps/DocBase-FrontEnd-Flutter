@@ -18,9 +18,13 @@ class _DoctorListState extends State<DoctorList> {
   int currentMax = 5;
   int pageNumber = 1;
   bool isLoading = false;
+  var obtainedToken;
 
   @override
   void initState() {
+    // final SharedPreferences sharedPreferences =
+    // await SharedPreferences.getInstance();
+    // obtainedToken = sharedPreferences.getString("token");
     pageNumber = 1;
     super.initState();
     DoctorServices.getDoctors().then((doctors) {
@@ -49,7 +53,7 @@ class _DoctorListState extends State<DoctorList> {
           preferredSize: Size.fromHeight(50),
           child: AppBar(
             title: Text(
-              "Available Doctors",
+              "Available Doctors ",
               style: TextStyle(color: Colors.white),
             ),
             leading: IconButton(
@@ -64,7 +68,7 @@ class _DoctorListState extends State<DoctorList> {
                         Navigator.pop(context);
                       },
                       child: FlatButton(
-                        color: Colors.orange,
+                        color: Colors.redAccent,
                         minWidth: 20,
                         height: 10,
                         splashColor: Colors.green,
@@ -81,7 +85,10 @@ class _DoctorListState extends State<DoctorList> {
                               MaterialPageRoute(
                                   builder: (context) => SignInPage()));
                         },
-                        child: Text("SignOut"),
+                        child: Text(
+                          "SIGNOUT",
+                          style: TextStyle(color: Colors.white, fontSize: 18),
+                        ),
                       ))),
             ],
             centerTitle: true,
@@ -171,7 +178,7 @@ class _DetailsState extends State<Details> {
                 child: IconButton(
                   icon: Icon(Icons.arrow_back, color: Colors.black),
                   onPressed: () => Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => SignInPage())),
+                      MaterialPageRoute(builder: (context) => DoctorList())),
                 ),
                 decoration: BoxDecoration(
                     border: Border.all(color: Colors.black54),

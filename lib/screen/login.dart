@@ -250,7 +250,7 @@ class _SignInScreenState extends State<SignInScreen> {
                     await SharedPreferences.getInstance();
                 if (validateAndSave()) {
                   setState(() {
-                    showSpinner = true;
+                    // isApiCallProcess = true;
                   });
 
                   print(" Details ");
@@ -261,13 +261,13 @@ class _SignInScreenState extends State<SignInScreen> {
                   apiService.login(requestModel).then(
                     (value) {
                       setState(() {
-                        showSpinner = false;
+                        isApiCallProcess = false;
                       });
                       //Error
                       print("Geting Tocken");
                       print(value.token);
                       sharedPreferences.setString("token", value.token);
-                      if (value.token != null) {
+                      if (value.token.isNotEmpty) {
                         print("succees");
                         Navigator.push(
                           context,
