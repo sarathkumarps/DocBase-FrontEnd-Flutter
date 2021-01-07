@@ -31,8 +31,6 @@ class _SignInScreenState extends State<SignInScreen> {
   bool hidePassword = true;
   bool isApiCallProcess = false;
 
-  TextEditingController emailController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
   GlobalKey<FormState> _key = GlobalKey();
   String name = '';
   String password = '';
@@ -148,7 +146,7 @@ class _SignInScreenState extends State<SignInScreen> {
               fontWeight: FontWeight.bold,
 
               // fontSize: _large ? 40 : (_medium ? 50 : 40),
-              fontSize: _large ? 40 : (_medium ? 40 : 40),
+              fontSize: _width / 13,
             ),
           ),
         ],
