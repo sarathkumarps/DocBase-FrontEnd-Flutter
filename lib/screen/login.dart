@@ -31,7 +31,7 @@ class _SignInScreenState extends State<SignInScreen> {
   bool _large;
   bool _medium;
   bool hidePassword = true;
-  bool isApiCallProcess = false;
+
   bool showSpinner = false;
 
   GlobalKey<FormState> _key = GlobalKey();
@@ -48,15 +48,6 @@ class _SignInScreenState extends State<SignInScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return ProgressHUD(
-      child: _loginui(context),
-      inAsyncCall: isApiCallProcess,
-      opacity: 0.3,
-    );
-  }
-
-  @override
-  Widget _loginui(BuildContext context) {
     _height = MediaQuery.of(context).size.height;
     _width = MediaQuery.of(context).size.width;
     _pixelRatio = MediaQuery.of(context).devicePixelRatio;
@@ -250,45 +241,44 @@ class _SignInScreenState extends State<SignInScreen> {
                     await SharedPreferences.getInstance();
                 if (validateAndSave()) {
                   setState(() {
-                    // isApiCallProcess = true;
-                  });
+                    showSpinner = true;
 
-                  print(" Details ");
+                    print(" Details ");
+                    print(requestModel.toJson()); //Working
 
-                  print(requestModel.toJson()); //Working
+                    LoginApi apiService = new LoginApi();
 
-//Getting Error while wrong username ,, #here
-                  LoginApi apiService = new LoginApi();
-
-                  apiService.login(requestModel).then(
-                    (value) {
-                      setState(() {
-                        isApiCallProcess = false;
-                      });
-                      //Error
-                      print("Geting Tocken");
-                      print(value.token);
-                      sharedPreferences.setString("token", value.token);
-                      if (value.token.isNotEmpty) {
-                        print("succees");
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) =>
-                                  DoctorList()), //Can Pass value.tocken
-                        );
-                        print("Routing to Doctor up screen");
-                      } else {
+                    apiService.login(requestModel).then(
+                      (value) {
                         setState(() {
-                          isApiCallProcess = false;
+                          showSpinner = false;
                         });
-                      }
-                    },
-                  );
+                        //Error
+                        print("Geting Tocken");
+                        print(value.token);
+                        sharedPreferences.setString("token", value.token);
+                        if (value.token != null) {
+                          print("succees");
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    DoctorList()), //Can Pass value.tocken
+                          );
+                          print("Routing to Doctor up screen");
+                        } else {
+                          setState(() {
+                            showSpinner = false;
+                            print("ERROR");
+                          });
+                        }
+                      },
+                    );
+                  });
                 } else {
                   print("ERROR");
                   setState(() {
-                    isApiCallProcess = false;
+                    showSpinner = false;
                   });
                 }
               },

@@ -5,6 +5,7 @@ import 'package:firstdemo/widgets/customShape.dart';
 import 'package:firstdemo/widgets/customappbar.dart';
 import 'package:firstdemo/widgets/responsiveWidget.dart';
 import 'package:flutter/material.dart';
+import 'package:modal_progress_hud/modal_progress_hud.dart';
 
 class SignUp extends StatefulWidget {
   @override
@@ -17,7 +18,7 @@ class _SignUpState extends State<SignUp> {
   double _pixelRatio;
   bool _large;
   bool _medium;
-  bool showSpinner = false;
+
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   GlobalKey<FormState> _key = GlobalKey();
@@ -26,6 +27,7 @@ class _SignUpState extends State<SignUp> {
   String userid = '';
   bool hidePassword = true;
   RegRequestModel rgrequestModel;
+  bool showSpinner = false;
   @override
   void initState() {
     super.initState();
@@ -41,19 +43,22 @@ class _SignUpState extends State<SignUp> {
     _medium = ResponsiveWidget.isScreenMedium(_width, _pixelRatio);
 
     return Material(
-      child: Container(
-        height: _height,
-        width: _width,
-        padding: EdgeInsets.only(bottom: 5),
-        child: SingleChildScrollView(
-          child: Column(
-            children: <Widget>[
-              Opacity(opacity: 0.88, child: CustomAppBar()),
-              clipShape(),
-              regTextRow(),
-              form(),
-              SizedBox(height: _height / 12),
-            ],
+      child: ModalProgressHUD(
+        inAsyncCall: showSpinner,
+        child: Container(
+          height: _height,
+          width: _width,
+          padding: EdgeInsets.only(bottom: 5),
+          child: SingleChildScrollView(
+            child: Column(
+              children: <Widget>[
+                Opacity(opacity: 0.88, child: CustomAppBar()),
+                clipShape(),
+                regTextRow(),
+                form(),
+                SizedBox(height: _height / 12),
+              ],
+            ),
           ),
         ),
       ),
@@ -179,6 +184,9 @@ class _SignUpState extends State<SignUp> {
               onPressed: () {
                 if (validateAndSave()) {
                   RegApi apiService = new RegApi();
+                  setState(() {
+                    showSpinner = true;
+                  });
                   try {
                     apiService.register(rgrequestModel).then((value) {
                       print("Tocken");
@@ -196,6 +204,9 @@ class _SignUpState extends State<SignUp> {
                       }
                     });
                   } catch (e) {
+                    setState(() {
+                      showSpinner = false;
+                    });
                     print(e);
                   }
                 }
