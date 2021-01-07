@@ -254,8 +254,10 @@ class _SignInScreenState extends State<SignInScreen> {
                   });
 
                   print(" Details ");
+
                   print(requestModel.toJson()); //Working
 
+//Getting Error while wrong username ,, #here
                   LoginApi apiService = new LoginApi();
 
                   apiService.login(requestModel).then(

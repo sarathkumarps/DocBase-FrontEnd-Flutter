@@ -47,104 +47,102 @@ class _DoctorListState extends State<DoctorList> {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: Scaffold(
-        appBar: PreferredSize(
-          preferredSize: Size.fromHeight(50),
-          child: AppBar(
-            title: Text(
-              "Available Doctors ",
-              style: TextStyle(color: Colors.white),
-            ),
-            leading: IconButton(
-              icon: Icon(Icons.arrow_back, color: Colors.white),
-              onPressed: () => Navigator.of(context).pop(),
-            ),
-            actions: <Widget>[
-              Padding(
-                  padding: EdgeInsets.only(right: 20.0),
-                  child: GestureDetector(
-                      onTap: () {
-                        Navigator.pop(context);
-                      },
-                      child: FlatButton(
-                        color: Colors.redAccent,
-                        minWidth: 20,
-                        height: 10,
-                        splashColor: Colors.green,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20)),
-                        onPressed: () async {
-                          print("SignOut");
-                          final SharedPreferences sharedPreferences =
-                              await SharedPreferences.getInstance();
-                          sharedPreferences.remove("token");
-                          print("Removed Tocken");
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => SignInPage()));
-                        },
-                        child: Text(
-                          "SIGNOUT",
-                          style: TextStyle(color: Colors.white, fontSize: 18),
-                        ),
-                      ))),
-            ],
-            centerTitle: true,
-            backgroundColor: Colors.white10,
-            flexibleSpace: Container(
-              decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                      colors: <Color>[Colors.red, Colors.blue])),
-            ),
+    return Scaffold(
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(50),
+        child: AppBar(
+          title: Text(
+            "Available Doctors ",
+            style: TextStyle(color: Colors.white),
           ),
-        ),
-        body: Container(
-          decoration: BoxDecoration(
-            gradient:
-                LinearGradient(colors: [Colors.orange[200], Colors.pinkAccent]),
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back, color: Colors.white),
+            onPressed: () => Navigator.of(context).pop(),
           ),
-          child: ListView.builder(
-              padding: EdgeInsets.all(20),
-              controller: _scrollController,
-              itemCount: null == _doctors ? 0 : _doctors.length,
-              itemBuilder: (context, index) {
-                Datum doctor = _doctors[index];
-                _getMoreData();
-
-                return Container(
-                  height: 150,
-                  alignment: Alignment.center,
-                  child: Card(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30.0),
-                    ),
-                    color: Colors.blue[50],
-                    child: ListTile(
-                        title: Text(doctor.firstName + "  " + doctor.lastName),
-                        trailing: Icon(
-                          Icons.radio_button_on,
-                          color: Colors.green,
-                        ),
-                        subtitle: Text(doctor.email),
-                        leading: CircleAvatar(
-                          backgroundImage: NetworkImage(doctor.avatar),
-                        ),
-                        onTap: () {
-                          Navigator.push(
+          actions: <Widget>[
+            Padding(
+                padding: EdgeInsets.only(right: 20.0),
+                child: GestureDetector(
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                    child: FlatButton(
+                      color: Colors.redAccent,
+                      minWidth: 20,
+                      height: 10,
+                      splashColor: Colors.green,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20)),
+                      onPressed: () async {
+                        print("SignOut");
+                        final SharedPreferences sharedPreferences =
+                            await SharedPreferences.getInstance();
+                        sharedPreferences.remove("token");
+                        print("Removed Tocken");
+                        Navigator.push(
                             context,
-                            new MaterialPageRoute(
-                              builder: (context) => Details(_doctors[index]),
-                            ),
-                          );
-                        }),
-                  ),
-                );
-              }),
+                            MaterialPageRoute(
+                                builder: (context) => SignInPage()));
+                      },
+                      child: Text(
+                        "SIGNOUT",
+                        style: TextStyle(color: Colors.white, fontSize: 18),
+                      ),
+                    ))),
+          ],
+          centerTitle: true,
+          backgroundColor: Colors.white10,
+          flexibleSpace: Container(
+            decoration: BoxDecoration(
+                gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: <Color>[Colors.red, Colors.blue])),
+          ),
         ),
+      ),
+      body: Container(
+        decoration: BoxDecoration(
+          gradient:
+              LinearGradient(colors: [Colors.orange[200], Colors.pinkAccent]),
+        ),
+        child: ListView.builder(
+            padding: EdgeInsets.all(20),
+            controller: _scrollController,
+            itemCount: null == _doctors ? 0 : _doctors.length,
+            itemBuilder: (context, index) {
+              Datum doctor = _doctors[index];
+              _getMoreData();
+
+              return Container(
+                height: 150,
+                alignment: Alignment.center,
+                child: Card(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30.0),
+                  ),
+                  color: Colors.blue[50],
+                  child: ListTile(
+                      title: Text(doctor.firstName + "  " + doctor.lastName),
+                      trailing: Icon(
+                        Icons.radio_button_on,
+                        color: Colors.green,
+                      ),
+                      subtitle: Text(doctor.email),
+                      leading: CircleAvatar(
+                        backgroundImage: NetworkImage(doctor.avatar),
+                      ),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          new MaterialPageRoute(
+                            builder: (context) => Details(_doctors[index]),
+                          ),
+                        );
+                      }),
+                ),
+              );
+            }),
       ),
     );
   }
