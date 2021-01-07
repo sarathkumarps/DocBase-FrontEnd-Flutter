@@ -170,7 +170,8 @@ class _DetailsState extends State<Details> {
                 width: 50,
                 child: IconButton(
                   icon: Icon(Icons.arrow_back, color: Colors.black),
-                  onPressed: () => Navigator.of(context).pop(),
+                  onPressed: () => Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => SignInPage())),
                 ),
                 decoration: BoxDecoration(
                     border: Border.all(color: Colors.black54),

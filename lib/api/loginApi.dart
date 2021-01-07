@@ -13,7 +13,6 @@ class LoginApi {
       return LoginResponseModel.fromJson((response.data)); //Was Error
     } else if (response.statusCode == 400) {
       print(response.data);
-      return LoginResponseModel.fromJson((response.data));
     } else {
       print("Error");
       throw Exception("Cant Reach Data");

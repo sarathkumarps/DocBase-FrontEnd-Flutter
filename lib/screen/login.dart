@@ -7,6 +7,7 @@ import 'package:firstdemo/widgets/progressHUD.dart';
 import 'package:firstdemo/widgets/responsiveWidget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SignInPage extends StatelessWidget {
@@ -31,6 +32,7 @@ class _SignInScreenState extends State<SignInScreen> {
   bool _medium;
   bool hidePassword = true;
   bool isApiCallProcess = false;
+  bool showSpinner = false;
 
   GlobalKey<FormState> _key = GlobalKey();
   String name = '';
@@ -61,23 +63,26 @@ class _SignInScreenState extends State<SignInScreen> {
     _large = ResponsiveWidget.isScreenLarge(_width, _pixelRatio);
     _medium = ResponsiveWidget.isScreenMedium(_width, _pixelRatio);
 
-    return Material(
-      child: Container(
-        height: _height,
-        width: _width,
-        padding: EdgeInsets.only(bottom: 5),
-        child: SingleChildScrollView(
-          child: Column(
-            children: <Widget>[
-              clipShape(),
-              welcomeTextRow(),
-              signInTextRow(),
-              form(),
-              SizedBox(height: _height / 12),
-              // button(),
-              signUpTextRow(),
-              SizedBox(height: _height / 25),
-            ],
+    return ModalProgressHUD(
+      inAsyncCall: showSpinner,
+      child: Material(
+        child: Container(
+          height: _height,
+          width: _width,
+          padding: EdgeInsets.only(bottom: 5),
+          child: SingleChildScrollView(
+            child: Column(
+              children: <Widget>[
+                clipShape(),
+                welcomeTextRow(),
+                signInTextRow(),
+                form(),
+                SizedBox(height: _height / 12),
+                // button(),
+                signUpTextRow(),
+                SizedBox(height: _height / 25),
+              ],
+            ),
           ),
         ),
       ),
@@ -245,7 +250,7 @@ class _SignInScreenState extends State<SignInScreen> {
                     await SharedPreferences.getInstance();
                 if (validateAndSave()) {
                   setState(() {
-                    // isApiCallProcess = true;
+                    showSpinner = true;
                   });
 
                   print(" Details ");
@@ -256,13 +261,13 @@ class _SignInScreenState extends State<SignInScreen> {
                   apiService.login(requestModel).then(
                     (value) {
                       setState(() {
-                        isApiCallProcess = false;
+                        showSpinner = false;
                       });
                       //Error
                       print("Geting Tocken");
                       print(value.token);
                       sharedPreferences.setString("token", value.token);
-                      if (value.token.isNotEmpty) {
+                      if (value.token != null) {
                         print("succees");
                         Navigator.push(
                           context,

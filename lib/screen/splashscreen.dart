@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:firstdemo/screen/doctorList.dart';
 import 'package:firstdemo/screen/login.dart';
-import 'package:firstdemo/screen/signUp.dart';
+
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
